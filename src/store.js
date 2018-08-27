@@ -27,6 +27,27 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    startGame({ state, dispatch }) {
+      dispatch("updateGameState", GAME_STATES.STARTED);
+
+      const currentSequence = state.currentSequence;
+
+      const lightSequence = (index = 0) => {
+        setTimeout(() => {
+          if (currentSequence[index]) {
+            dispatch("lightSquare", currentSequence[index]);
+
+            lightSequence(index + 1);
+          } else {
+            dispatch("toggleDemonstrating", false);
+            dispatch("lightSquare", -1);
+          }
+        }, 1000);
+      };
+
+      dispatch("toggleDemonstrating", true);
+      lightSequence();
+    },
     addToSequence({ commit }, newNumber) {
       commit("addToSequence", newNumber);
     },

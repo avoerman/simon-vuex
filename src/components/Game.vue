@@ -44,25 +44,7 @@ export default {
   },
   methods: {
     start() {
-      this.$store.dispatch("updateGameState", GAME_STATES.STARTED);
-
-      const currentSequence = this.$store.state.currentSequence;
-
-      const lightSequence = (index = 0) => {
-        setTimeout(() => {
-          if (currentSequence[index]) {
-            this.$store.dispatch("lightSquare", currentSequence[index]);
-
-            lightSequence(index + 1);
-          } else {
-            this.$store.dispatch("toggleDemonstrating", false);
-            this.$store.dispatch("lightSquare", -1);
-          }
-        }, 1000);
-      };
-
-      this.$store.dispatch("toggleDemonstrating", true);
-      lightSequence();
+      this.$store.dispatch("startGame");
     },
     handleSquareClick(guess) {
       console.log("click", guess);
