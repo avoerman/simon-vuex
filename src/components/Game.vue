@@ -1,17 +1,17 @@
 <template>
   <div class="wrap">
-    <button @click="start()">Start</button>
+    <button class="startButton" v-if="gameNotStarted" @click="start()">Start</button>
     <div class="squares">
       <div class="row">
-        <Square color="#019A4A" :lit="tlLit" :demonstrating="demonstrating"
+        <Square color="#019A4A" :lit="litCell === 1" :demonstrating="demonstrating"
                 @click.native="handleSquareClick(1)"/>
-        <Square color="#EB1C24" :lit="blLit" :demonstrating="demonstrating"
-                @click.native="handleSquareClick(2)"/>
+        <Square color="#EB1C24" :lit="litCell === 3" :demonstrating="demonstrating"
+                @click.native="handleSquareClick(3)"/>
       </div>
       <div class="row">
-        <Square color="#FFDA01" :lit="trLit" :demonstrating="demonstrating"
-                @click.native="handleSquareClick(3)"/>
-        <Square color="#6891CC" :lit="brLit" :demonstrating="demonstrating"
+        <Square color="#FFDA01" :lit="litCell === 2" :demonstrating="demonstrating"
+                @click.native="handleSquareClick(2)"/>
+        <Square color="#6891CC" :lit="litCell === 4" :demonstrating="demonstrating"
                 @click.native="handleSquareClick(4)"/>
       </div>
     </div>
@@ -20,6 +20,7 @@
 
 <script>
 import Square from "@/components/Square";
+import { GAME_STATES } from "@/util/game-constants";
 
 export default {
   name: "Game",
@@ -27,41 +28,40 @@ export default {
     Square
   },
   props: {},
-  data() {
-    return {
-      tlLit: false,
-      trLit: false,
-      blLit: false,
-      brLit: false,
-      demonstrating: false
-    };
+  computed: {
+    demonstrating() {
+      return this.$store.state.demonstrating;
+    },
+    litCell() {
+      return this.$store.state.litCell;
+    },
+    gameNotStarted() {
+      return this.$store.state.gameState === GAME_STATES.NOT_STARTED;
+    }
   },
-  computed: {},
-  created() {},
+  created() {
+    this.$store.dispatch("updateGameState", GAME_STATES.NOT_STARTED);
+  },
   methods: {
     start() {
+      this.$store.dispatch("updateGameState", GAME_STATES.STARTED);
+
       const currentSequence = this.$store.state.currentSequence;
 
-      const light = lightNumber => {
-        this.tlLit = lightNumber === 1;
-        this.trLit = lightNumber === 2;
-        this.blLit = lightNumber === 3;
-        this.brLit = lightNumber === 4;
-      };
-
       const lightSequence = (index = 0) => {
-        this.demonstrating = true;
         setTimeout(() => {
           if (currentSequence[index]) {
-            light(currentSequence[index]);
+            this.$store.dispatch("lightSquare", currentSequence[index]);
+
             lightSequence(index + 1);
           } else {
-            this.demonstrating = false;
-            light(-1);
+            this.$store.dispatch("toggleDemonstrating", false);
+            this.$store.dispatch("lightSquare", -1);
           }
         }, 1000);
       };
 
+      this.$store.dispatch("toggleDemonstrating", true);
       lightSequence();
     },
     handleSquareClick(guess) {
@@ -77,6 +77,18 @@ export default {
   align-items: center;
   flex-direction: column;
   margin-top: 10vh;
+  position: relative;
+}
+
+.startButton {
+  position: absolute;
+  top: 20vh;
+  font-size: large;
+  background: white;
+  border: 1px solid teal;
+  color: teal;
+  padding: 2em;
+  z-index: 2;
 }
 
 .squares {
