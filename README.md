@@ -1,4 +1,5 @@
-# simon
+# simon-vuex
+Simon game in Vue and Vuex
 
 ## Project setup
 ```
