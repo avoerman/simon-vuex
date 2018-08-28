@@ -16,8 +16,9 @@ export default {
 
 <style scoped>
 .block {
-  width: 20em;
-  height: 20em;
+  width: 48vw;
+  max-width: 20em;
+  padding-top: 100%;
   border: 1px solid #666;
   border-radius: 2em;
   opacity: 0.25;
@@ -33,8 +34,10 @@ export default {
   cursor: pointer;
 }
 
-.hoverable:hover {
-  border: 1px solid black;
-  opacity: 0.5;
+@media (pointer: fine) {
+  .hoverable:hover {
+    border: 1px solid black;
+    opacity: 0.5;
+  }
 }
 </style>

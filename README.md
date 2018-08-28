@@ -1,6 +1,9 @@
 # simon-vuex
 Simon game in Vue and Vuex
 
+Demo: https://avoerman.github.io/simon-vuex
+
+
 ## Project setup
 ```
 npm install
