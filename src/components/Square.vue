@@ -21,7 +21,7 @@ export default {
   border: 1px solid #666;
   border-radius: 2em;
   opacity: 0.25;
-  transition: opacity 1s linear;
+  transition: opacity 0.5s linear;
 }
 
 .lit {
@@ -35,6 +35,6 @@ export default {
 
 .hoverable:hover {
   border: 1px solid black;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 </style>

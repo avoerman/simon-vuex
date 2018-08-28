@@ -16,23 +16,27 @@ export default {
 .main {
   max-width: 20em;
   background: white;
-  border: 1px solid dodgerblue;
-  box-shadow: 2px 2px 3px 0 #ccc;
+  border: 1px solid black;
+  box-shadow: 0 0 11px -2px #666;
   margin-left: auto;
   margin-right: auto;
   margin-top: 6em;
   padding: 2em;
 }
 
+h2 {
+  color: black;
+}
+
 button {
-  padding: 1em;
-  border: 1px solid teal;
-  color: teal;
-  background: white;
+  padding: 0.75em;
+  border: 1px solid black;
+  color: white;
+  background: black;
   transition: all 0.25s;
 }
 button:hover {
-  background: teal;
-  color: white;
+  background: white;
+  color: black;
 }
 </style>

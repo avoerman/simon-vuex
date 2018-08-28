@@ -9,12 +9,13 @@ export default new Vuex.Store({
     gameState: GAME_STATES.NOT_STARTED,
     litCell: "",
     demonstrating: false,
-    currentSequence: [1, 2, 3, 4],
-    currentGuessSequence: []
+    currentSequence: [],
+    guessIndex: 0,
+    topScore: 0
   },
   mutations: {
     addToSequence(state, newNumber) {
-      state.currentGuessSequence = [...state.currentGuessSequence, newNumber];
+      state.currentSequence = [...state.currentSequence, newNumber];
     },
     toggleDemonstrating(state, toggleState) {
       state.demonstrating = toggleState;
@@ -24,11 +25,25 @@ export default new Vuex.Store({
     },
     updateGameState(state, gameState) {
       state.gameState = gameState;
+    },
+    incrementGuessIndex(state) {
+      state.guessIndex++;
+    },
+    resetGuessIndex(state) {
+      state.guessIndex = 0;
+    },
+    resetSequence(state) {
+      state.currentSequence = [];
+    },
+    topScore(state, newTopScore) {
+      state.topScore = newTopScore;
     }
   },
   actions: {
-    startGame({ state, dispatch }) {
+    startRound({ state, dispatch, commit }) {
       dispatch("updateGameState", GAME_STATES.STARTED);
+      commit("resetGuessIndex");
+      dispatch("addToSequence");
 
       const currentSequence = state.currentSequence;
 
@@ -48,7 +63,26 @@ export default new Vuex.Store({
       dispatch("toggleDemonstrating", true);
       lightSequence();
     },
-    addToSequence({ commit }, newNumber) {
+    restartGame({ commit, dispatch }) {
+      commit("resetGuessIndex");
+      commit("resetSequence");
+      dispatch("startRound");
+    },
+    guess({ state, dispatch, commit }, guessNumber) {
+      if (guessNumber === state.currentSequence[state.guessIndex]) {
+        const lastGuess = state.guessIndex === state.currentSequence.length - 1;
+        if (!lastGuess) {
+          commit("incrementGuessIndex");
+        } else {
+          dispatch("startRound");
+        }
+      } else {
+        dispatch("updateGameState", GAME_STATES.FAIL);
+        dispatch("setTopScore", state.currentSequence.length);
+      }
+    },
+    addToSequence({ commit }) {
+      const newNumber = Math.floor(Math.random() * 4 + 1);
       commit("addToSequence", newNumber);
     },
     toggleDemonstrating({ commit }, toggleState) {
@@ -59,6 +93,11 @@ export default new Vuex.Store({
     },
     updateGameState({ commit }, gameState) {
       commit("updateGameState", gameState);
+    },
+    setTopScore({ state, commit }, score) {
+      if (score > state.topScore) {
+        commit("topScore", score);
+      }
     }
   }
 });

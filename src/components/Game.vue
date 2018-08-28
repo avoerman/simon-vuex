@@ -1,6 +1,7 @@
 <template>
   <div class="wrap">
-    <button class="startButton" v-if="gameNotStarted" @click="start()">Start</button>
+    <BaseButton class="startButton" v-if="gameNotStarted" @click.native="start()">Start</BaseButton>
+    <Failed v-if="gameFailed"></Failed>
     <div class="squares">
       <div class="row">
         <Square color="#019A4A" :lit="litCell === 1" :demonstrating="demonstrating"
@@ -20,14 +21,15 @@
 
 <script>
 import Square from "@/components/Square";
+import Failed from "@/components/Failed";
 import { GAME_STATES } from "@/util/game-constants";
 
 export default {
   name: "Game",
   components: {
-    Square
+    Square,
+    Failed
   },
-  props: {},
   computed: {
     demonstrating() {
       return this.$store.state.demonstrating;
@@ -37,6 +39,9 @@ export default {
     },
     gameNotStarted() {
       return this.$store.state.gameState === GAME_STATES.NOT_STARTED;
+    },
+    gameFailed() {
+      return this.$store.state.gameState === GAME_STATES.FAIL;
     }
   },
   created() {
@@ -44,10 +49,10 @@ export default {
   },
   methods: {
     start() {
-      this.$store.dispatch("startGame");
+      this.$store.dispatch("startRound");
     },
-    handleSquareClick(guess) {
-      console.log("click", guess);
+    handleSquareClick(guessNumber) {
+      this.$store.dispatch("guess", guessNumber);
     }
   }
 };
@@ -65,10 +70,6 @@ export default {
 .startButton {
   position: absolute;
   top: 20vh;
-  font-size: large;
-  background: white;
-  border: 1px solid teal;
-  color: teal;
   padding: 2em;
   z-index: 2;
 }
