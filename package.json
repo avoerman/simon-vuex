@@ -2,7 +2,7 @@
   "name": "simon-vuex",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/avoerman/simon-vuex",
+  "homepage": "git@github.com:avoerman/simon-vuex",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
