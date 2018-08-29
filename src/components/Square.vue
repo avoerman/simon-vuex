@@ -1,15 +1,30 @@
 <template>
-  <div class="block" v-bind:style="{ background: color }"
+  <div class="block" v-bind:style="blockStyles"
        v-bind:class="{ lit: lit, hoverable: !demonstrating}"></div>
 </template>
 
 <script>
+import Color from "color";
+
 export default {
   name: "Square",
   props: {
     color: "",
     lit: false,
     demonstrating: false
+  },
+  computed: {
+    blockStyles() {
+      const subtleLight = Color(this.color).lighten(0.4);
+      const veryLight = Color(this.color).lighten(0.6);
+
+      return {
+        background: this.color,
+        ["background-image"]: this.lit
+          ? `radial-gradient( ${veryLight}, ${this.color})`
+          : `radial-gradient( ${subtleLight}, ${this.color})`
+      };
+    }
   }
 };
 </script>
