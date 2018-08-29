@@ -40,28 +40,26 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    startRound({ state, dispatch, commit }) {
+    startRound({ dispatch, commit }) {
       dispatch("updateGameState", GAME_STATES.STARTED);
       commit("resetGuessIndex");
       dispatch("addToSequence");
-
-      const currentSequence = state.currentSequence;
-
-      const lightSequence = (index = 0) => {
-        setTimeout(() => {
-          if (currentSequence[index]) {
-            dispatch("lightSquare", currentSequence[index]);
-
-            lightSequence(index + 1);
-          } else {
-            dispatch("toggleDemonstrating", false);
-            dispatch("lightSquare", -1);
-          }
-        }, 1000);
-      };
-
       dispatch("toggleDemonstrating", true);
-      lightSequence();
+      dispatch("lightSequence", 0);
+    },
+    lightSequence({ dispatch, state }, sequenceIndex) {
+      setTimeout(() => {
+        if (state.currentSequence[sequenceIndex]) {
+          dispatch("lightSquare", -1);
+          setTimeout(() => {
+            dispatch("lightSquare", state.currentSequence[sequenceIndex]);
+            dispatch("lightSequence", sequenceIndex + 1);
+          }, 100);
+        } else {
+          dispatch("toggleDemonstrating", false);
+          dispatch("lightSquare", -1);
+        }
+      }, 1000);
     },
     restartGame({ commit, dispatch }) {
       commit("resetGuessIndex");

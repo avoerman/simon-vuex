@@ -26,8 +26,8 @@ export default {
 }
 
 .lit {
-  opacity: 1;
   border: 1px solid black;
+  animation: flash 1s ease-in;
 }
 
 .hoverable {
@@ -38,6 +38,21 @@ export default {
   .hoverable:hover {
     border: 1px solid black;
     opacity: 0.5;
+  }
+}
+
+@keyframes flash {
+  0% {
+    opacity: 0.25;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0.25;
   }
 }
 </style>
